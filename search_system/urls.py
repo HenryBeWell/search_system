@@ -16,14 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 
-from rest_framework.routers import DefaultRouter
-
-from candidates.views import CandidatesListViewSet
-
-router = DefaultRouter()
-router.register(r'search_candidates', CandidatesListViewSet, basename="candidates")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path('', include(router.urls)),
+    path('', include(('candidates.urls', 'search_system.candidates'), namespace='candidates'))
+
 ]

@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from candidates.models import CandidateSkillScores
 from candidates.pagenate import CustomPagination
+from candidates.permission import CandidatesSearchPermission
 from candidates.serializers import CandidateSkillSearchSerializer
 
 
@@ -19,6 +20,7 @@ class CandidatesSearchAPIView(generics.CreateAPIView):
     queryset = CandidateSkillScores.objects.all()
     serializer_class = CandidateSkillSearchSerializer
     pagination_class = CustomPagination
+    permission_classes = (CandidatesSearchPermission, )
 
     def get_queryset(self, skill_name=None):
         """
@@ -49,7 +51,6 @@ class CandidatesSearchAPIView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         skill_name = request.data.get("skill_name")
         queryset = self.get_queryset(skill_name)
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

@@ -1,5 +1,5 @@
-from django.core.paginator import Paginator
 from django.db.models import QuerySet
+from django.core.cache import cache
 
 # Create your views here.
 from rest_framework import generics
@@ -20,7 +20,7 @@ class CandidatesSearchAPIView(generics.CreateAPIView):
     queryset = CandidateSkillScores.objects.all()
     serializer_class = CandidateSkillSearchSerializer
     pagination_class = CustomPagination
-    permission_classes = (CandidatesSearchPermission, )
+    permission_classes = (CandidatesSearchPermission,)
 
     def get_queryset(self, skill_name=None):
         """
@@ -50,10 +50,19 @@ class CandidatesSearchAPIView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         skill_name = request.data.get("skill_name")
-        queryset = self.get_queryset(skill_name)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        cache_key = f"{skill_name}-{request.data['page']}-{request.data['page_size']}"
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = self.get_queryset(skill_name)
+            page = self.paginate_queryset(queryset)
+
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                cache.set(cache_key, serializer.data, 10)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            cache.set(cache_key, serializer.data, 10)
+            return Response(serializer.data)
+
+        return Response(data)

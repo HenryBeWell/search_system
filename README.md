@@ -170,18 +170,18 @@ python manage.py runserver
     ]
    }
    ```
-
-   | 参数名           | 类型          | 描述                                                         |
-   | ---------------- | ------------- | ------------------------------------------------------------ |
-   | count            | int           | 符合查询条件的候选人数量                                     |
-   | candidates       | list of dicts | 候选人信息列表，每个元素是一个字典，包含以下字段：           |
-   | main_skill_score | str           | 候选人在指定技能上的得分，保留两位小数                       |
-   | candidate_name   | str           | 候选人姓名                                                   |
-   | related_skills   | list of dicts | 候选人在其他相关技能上的得分信息列表，每个元素是一个字典，包含以下字段： |
-   | name             | str           | 技能名称                                                     |
-   | score            | str           | 技能得分，保留两位小数                                       |
-   | sources          | list of str   | 技能得分来源的平台列表                                       |
-   | average          | float         | 技能得分的平均值，保留一位小数                               |
+   
+   | Parameter        | Type   | Description                                                 |
+   | ---------------- | ------ | ----------------------------------------------------------- |
+   | count            | int    | Total number of candidates found based on the search query  |
+   | candidates       | list   | List of candidate objects returned by the search service    |
+   | candidate_name   | string | Name of the candidate                                       |
+   | main_skill_score | string | Score of the candidate's main skill                         |
+   | related_skills   | list   | List of related skill objects for the candidate             |
+   | name             | string | Name of the related skill                                   |
+   | score            | string | Score of the related skill                                  |
+   | sources          | list   | List of sources that contributed to the related skill score |
+   | average          | float  | Average score of the related skill across all sources       |
 
 ## Cache
 

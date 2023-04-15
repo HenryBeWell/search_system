@@ -141,3 +141,4 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 APP_ID = ['Aspecta.ai']
+CACHE_TTL = 10  # cache expire time

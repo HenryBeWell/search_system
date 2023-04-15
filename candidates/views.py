@@ -9,7 +9,7 @@ from candidates.models import CandidateSkillScores
 from candidates.pagenate import CustomPagination
 from candidates.permission import CandidatesSearchPermission
 from candidates.serializers import CandidateSkillSearchSerializer
-
+from search_system.settings import CACHE_TTL
 
 class CandidatesSearchAPIView(generics.CreateAPIView):
     """
@@ -58,11 +58,11 @@ class CandidatesSearchAPIView(generics.CreateAPIView):
 
             if page is not None:
                 serializer = self.get_serializer(page, many=True)
-                cache.set(cache_key, serializer.data, 10)
+                cache.set(cache_key, serializer.data, CACHE_TTL)
                 return self.get_paginated_response(serializer.data)
 
             serializer = self.get_serializer(queryset, many=True)
-            cache.set(cache_key, serializer.data, 10)
+            cache.set(cache_key, serializer.data, CACHE_TTL)
             return Response(serializer.data)
 
         return Response(data)
